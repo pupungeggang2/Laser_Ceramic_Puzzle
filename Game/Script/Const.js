@@ -1,0 +1,5 @@
+const emptySave = {
+    hub: {
+
+    },
+}
