@@ -4,7 +4,9 @@ function loopTitle() {
 
 function displayTitle() {
     drawSceneInit()
-    context.fillText(`123`, 4, 4)
+
+    context.drawImage(img.button.play, UI.title.buttonStart[0], UI.title.buttonStart[1])
+    context.drawImage(img.button.erase, UI.title.buttonErase[0], UI.title.buttonErase[1])
 }
 
 function mouseDownTitle(x, y, button) {

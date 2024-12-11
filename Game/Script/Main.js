@@ -10,7 +10,7 @@ function main() {
     window.addEventListener('mousedown', mouseDown, false)
     window.addEventListener('mouseup', mouseUp, false)
 
-    //ImageLoad()
+    imageLoad()
     //SaveInit()
 
     gameFrameCurrent = Date.now()

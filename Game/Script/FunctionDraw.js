@@ -9,4 +9,3 @@ function drawSceneInit() {
     context.fillRect(0, 0, 1280, 720)
     context.fillStyle = 'Black'
 }
-
