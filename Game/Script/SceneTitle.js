@@ -23,6 +23,9 @@ function keyDownTitle(key) {
             if (key === 'd') {
                 scene = 'Puzzle'
                 state = ''
+                level = new Level(dataLevel['Hub'])
+            } else if (key === 'e') {
+                eraseData()
             }
         }
     }

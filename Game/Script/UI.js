@@ -4,5 +4,8 @@ const UI = {
         buttonErase: [800, 200, 320, 320]
     },
 
-
+    puzzle: {
+        boardStart: [240, 40],
+        cellSize: [64, 64],
+    }
 }

@@ -11,7 +11,7 @@ function main() {
     window.addEventListener('mouseup', mouseUp, false)
 
     imageLoad()
-    //SaveInit()
+    saveInit()
 
     gameFrameCurrent = Date.now()
     gameFramePrevious = Date.now() - 16
