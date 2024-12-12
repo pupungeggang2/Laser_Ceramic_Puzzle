@@ -14,6 +14,7 @@ const dataLevel = {
         'Thing': [
 
         ],
+        'Groups': [],
         'Start': [1, 1],
         'Goal': [4, 7]
     },
@@ -34,6 +35,7 @@ const dataLevel = {
         'Thing': [
 
         ],
+        'Groups': {},
         'Start': [1, 1],
         'Goal': [6, 6]
     },
@@ -54,6 +56,7 @@ const dataLevel = {
         'Thing': [
             {'Type': 'Box', 'Position': [3, 4], 'Solid': true, 'Pushable': true}
         ],
+        'Groups': [],
         'Start': [3, 1],
         'Goal': [3, 6],
     },
@@ -69,12 +72,13 @@ const dataLevel = {
             [5, 5], [5, 6],
         ],
         'Floor': [
-            {'Type': 'PressureButton', 'Position': [6, 2], 'Solid': false},
-            {'Type': 'Gate', 'Position': [6, 5], 'Solid': true, 'Opened': false}
+            {'Type': 'PressureButton', 'Position': [6, 2], 'Solid': false, 'Group': '1'},
+            {'Type': 'Gate', 'Position': [6, 5], 'Solid': true, 'Opened': false, 'Condition': [['And', '1']]}
         ],
         'Thing': [
             {'Type': 'Box', 'Position': [2, 4], 'Solid': true, 'Pushable': true},
         ],
+        'Groups': ['1'],
         'Start': [3, 1],
         'Goal': [6, 6],
     }

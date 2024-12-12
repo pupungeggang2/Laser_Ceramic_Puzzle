@@ -1,23 +1,29 @@
 class Level {
+    name = ''
     row = 0
     col = 0
     player = [0, 0]
     goal = [0, 0]
     floor = []
     thing = []
-    name = ''
+    group = {}
 
     camera = [0, 0]
 
     constructor(data) {
+        this.name = data['Name']
         this.row = data['Size'][0]
         this.col = data['Size'][1]
         this.player[0] = data['Start'][0]
         this.player[1] = data['Start'][1]
         this.goal[0] = data['Goal'][0]
         this.goal[1] = data['Goal'][1]
-        this.name = data['Name']
+        this.group = {}
 
+        for (let i = 0; i < data['Groups'].length; i++) {
+            this.group[data['Groups'][i]] = []
+        }
+        
         this.floor = []
 
         for (let i = 0; i < this.row; i++) {
@@ -36,10 +42,13 @@ class Level {
                 this.floor[pos[0]][pos[1]] = new Connection(tempFloor)
             } else if (tempFloor['Type'] === 'PressureButton') {
                 let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
-                this.floor[pos[0]][pos[1]] = new PressureButton(tempFloor)
+                let floorInstance = new PressureButton(tempFloor)
+                this.floor[pos[0]][pos[1]] = floorInstance
+                this.group[tempFloor['Group']].push(floorInstance)
             } else if (tempFloor['Type'] === 'Gate') {
                 let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
-                this.floor[pos[0]][pos[1]] = new Gate(tempFloor)
+                let floorInstance = new Gate(tempFloor)
+                this.floor[pos[0]][pos[1]] = floorInstance
             }
         }
 
@@ -70,6 +79,8 @@ class Level {
         }
 
         this.thing[this.player[0]][this.player[1]] = new Player({'Position': [this.player[0], this.player[1]]})
+
+        this.applyBoardChange()
     }
 
     movePlayer(direction) {
@@ -112,7 +123,27 @@ class Level {
     }
 
     applyBoardChange() {
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
+                let tempFloor = this.floor[i][j]
+                let tempThing = this.thing[i][j]
 
+                if (tempFloor instanceof PressureButton) {
+                    tempFloor.checkTruth(tempThing)
+                }
+            }
+        }
+
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
+                let tempFloor = this.floor[i][j]
+                let tempThing = this.thing[i][j]
+
+                if (tempFloor instanceof Gate) {
+                    tempFloor.checkTruth(this.group)
+                }
+            }
+        }
     }
 
     winCheck() {
@@ -154,11 +185,18 @@ class FloorEmpty extends Floor {
 }
 
 class PressureButton extends Floor {
-    condition = []
+    state = false
     constructor(properties) {
         super(properties)
         this.solid = properties['Solid']
-        this.condition = properties['Condition']
+    }
+
+    checkTruth(thing) {
+        if (thing instanceof ThingEmpty) {
+            this.state = false
+        } else {
+            this.state = true
+        }
     }
 }
 
@@ -170,6 +208,23 @@ class Gate extends Floor {
         this.solid = properties['Solid']
         this.condition = properties['Condition']
         this.opened = properties['Opened']
+        this.condition = properties['Condition']
+    }
+
+    checkTruth(group) {
+        this.opened = true
+        this.solid = false
+        for (let i = 0; i < this.condition.length; i++) {
+            if (this.condition[i][0] === 'And') {
+                for (let j = 0; j < group[this.condition[i][1]].length; j++) {
+                    if (group[this.condition[i][1]][j].state === false) {
+                        this.opened = false
+                        this.solid = true
+                        return
+                    }
+                }
+            }
+        }
     }
 }
 

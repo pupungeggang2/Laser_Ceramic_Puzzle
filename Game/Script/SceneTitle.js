@@ -21,7 +21,6 @@ function mouseUpTitle(x, y, button) {
                     scene = 'Puzzle'
                     state = ''
                     level = new Level(dataLevel['Hub'])
-                    level.applyBoardChange()
 
                     if (varSave.new === true) {
                         varSave.new = false

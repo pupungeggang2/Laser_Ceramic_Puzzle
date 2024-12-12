@@ -72,7 +72,11 @@ function drawLevel(level, cameraValid) {
                 } else if (tempFloor instanceof PressureButton) {
                     context.drawImage(img.pressureButton, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
                 } else if (tempFloor instanceof Gate) {
-                    context.drawImage(img.gateClosed, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    if (tempFloor.opened === true) {
+                        context.drawImage(img.gateOpened, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    } else {
+                        context.drawImage(img.gateClosed, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    }
                 }
 
                 if (tempThing instanceof Wall) {
