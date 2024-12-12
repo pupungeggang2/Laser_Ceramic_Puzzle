@@ -35,9 +35,11 @@ class Level {
                 let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
                 this.floor[pos[0]][pos[1]] = new Connection(tempFloor)
             } else if (tempFloor['Type'] === 'PressureButton') {
-
+                let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
+                this.floor[pos[0]][pos[1]] = new PressureButton(tempFloor)
             } else if (tempFloor['Type'] === 'Gate') {
-                
+                let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
+                this.floor[pos[0]][pos[1]] = new Gate(tempFloor)
             }
         }
 
@@ -211,7 +213,7 @@ class ThingEmpty extends Thing {
 class Wall extends Thing {
     constructor(properties) {
         super(properties)
-        this.solid = false
+        this.solid = true
         this.pushable = false
     }
 }

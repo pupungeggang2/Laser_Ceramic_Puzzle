@@ -11,6 +11,9 @@ let img = {
     box: new Image(),
     player: new Image(),
     flag: new Image(),
+    pressureButton: new Image(),
+    gateClosed: new Image(),
+    gateOpened: new Image(),
     levelOpened: new Image(),
     levelCleared: new Image(),
 }
@@ -25,6 +28,9 @@ function imageLoad() {
     img.box.src = 'Image/Box.png'
     img.player.src = 'Image/Player.png'
     img.flag.src = 'Image/Flag.png'
+    img.pressureButton.src = 'Image/PressureButton.png'
+    img.gateClosed.src = 'Image/GateClosed.png'
+    img.gateOpened.src = 'Image/GateOpened.png'
     img.levelOpened.src = 'Image/LevelOpened.png'
     img.levelCleared.src = 'Image/LevelCleared.png'
 }
