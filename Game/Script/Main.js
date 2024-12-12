@@ -19,14 +19,16 @@ function main() {
 }
 
 function loop() {
+    gameFramePrevious = gameFrameCurrent
     gameFrameCurrent = Date.now()
-    gameFramePrevious = Date.now()
     delta = gameFrameCurrent - gameFramePrevious
 
     if (scene === 'Title') {
         loopTitle()
     } else if (scene === 'Puzzle') {
         loopPuzzle()
+    } else if (scene === 'Credit') {
+        loopCredit()
     }
 
     gameLoop = requestAnimationFrame(loop)
@@ -42,6 +44,8 @@ function mouseUp(event) {
         mouseUpTitle(x, y, button)
     } else if (scene === 'Puzzle') {
         mouseUpPuzzle(x, y, button)
+    } else if (sceen === 'Credit') {
+        mouseUpCredit(x, y, button)
     }
 }
 
@@ -55,6 +59,8 @@ function mouseDown(event) {
         mouseDownTitle(x, y, button)
     } else if (scene === 'Puzzle') {
         mouseDownPuzzle(x, y, button)
+    } else if (Scene === 'Credit') {
+        mouseDownCredit(x, y, button)
     }
 }
 
@@ -65,6 +71,8 @@ function keyDown(event) {
         keyDownTitle(key)
     } else if (scene === 'Puzzle') {
         keyDownPuzzle(key)
+    } else if (scene === 'Credit') {
+        keyDownCredit(key)
     }
 }
 

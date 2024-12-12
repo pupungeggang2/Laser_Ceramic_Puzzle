@@ -7,5 +7,10 @@ const UI = {
     puzzle: {
         boardStart: [240, 40],
         cellSize: [64, 64],
+
+        clearedWindow: {
+            rect: [480, 200, 320, 320],
+            imageCleared: [480, 200],
+        }
     }
 }

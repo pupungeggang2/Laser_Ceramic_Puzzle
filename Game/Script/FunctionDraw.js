@@ -37,6 +37,9 @@ function drawLevel(level, cameraValid) {
         } else if (colStart > level.col - numCol) {
             colStart = level.col - numCol
         }
+    } else {
+        left = 640 - 32 * numCol
+        top = 360 - 32 * numRow
     }
 
     for (let i = 0; i < numRow; i++) {
@@ -54,7 +57,19 @@ function drawLevel(level, cameraValid) {
             let row = rowStart + i
             let col = colStart + j
             if (level.insideBoard(row, col)) {
+                let tempFloor = level.floor[row][col]
                 let tempThing = level.thing[row][col]
+
+                if (tempFloor instanceof Goal) {
+                    context.drawImage(img.flag, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                } else if (tempFloor instanceof Connection) {
+                    let targetLevel = tempFloor.connectedLevel
+                    if (varSave.clearedLevel[targetLevel] === false) {
+                        context.drawImage(img.levelOpened, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    } else {
+                        context.drawImage(img.levelCleared, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    }
+                }
 
                 if (tempThing instanceof Wall) {
                     context.drawImage(img.wall, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1])
@@ -66,4 +81,26 @@ function drawLevel(level, cameraValid) {
             }
         }
     }
+}
+
+function drawTutorial() {
+
+}
+
+function drawLevelClear() {
+    context.fillStyle = 'White'
+    context.fillRect(UI.puzzle.clearedWindow.rect[0], UI.puzzle.clearedWindow.rect[1], UI.puzzle.clearedWindow.rect[2], UI.puzzle.clearedWindow.rect[3])
+    context.strokeRect(UI.puzzle.clearedWindow.rect[0], UI.puzzle.clearedWindow.rect[1], UI.puzzle.clearedWindow.rect[2], UI.puzzle.clearedWindow.rect[3])
+    context.fillStyle = 'Black'
+
+    context.drawImage(img.button.clear, UI.puzzle.clearedWindow.imageCleared[0], UI.puzzle.clearedWindow.imageCleared[1])
+}
+
+function drawGameClear() {
+    context.fillStyle = 'White'
+    context.fillRect(UI.puzzle.clearedWindow.rect[0], UI.puzzle.clearedWindow.rect[1], UI.puzzle.clearedWindow.rect[2], UI.puzzle.clearedWindow.rect[3])
+    context.strokeRect(UI.puzzle.clearedWindow.rect[0], UI.puzzle.clearedWindow.rect[1], UI.puzzle.clearedWindow.rect[2], UI.puzzle.clearedWindow.rect[3])
+    context.fillStyle = 'Black'
+
+    context.drawImage(img.button.clear, UI.puzzle.clearedWindow.imageCleared[0], UI.puzzle.clearedWindow.imageCleared[1])
 }

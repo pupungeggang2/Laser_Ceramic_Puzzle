@@ -20,11 +20,17 @@ function mouseUpTitle(x, y, button) {
 function keyDownTitle(key) {
     if (menu === false) {
         if (state === '') {
-            if (key === 'd') {
+            if (key === 'e') {
                 scene = 'Puzzle'
                 state = ''
                 level = new Level(dataLevel['Hub'])
-            } else if (key === 'e') {
+                level.applyBoardChange()
+
+                if (varSave.new === true) {
+                    varSave.new = false
+                    state = 'Tutorial'
+                }
+            } else if (key === 'd') {
                 eraseData()
             }
         }

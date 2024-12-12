@@ -1,10 +1,13 @@
+const fileName = 'pupuneggang2:Laser_Ceramic_Puzzle'
+
 const emptySave = {
-    hub: {
-        'Size': [40, 40],
-        'Goal': [100, 100],
-        'Wall': [[0, 0], [0, 1], [0, 2], [1, 0], [2, 0]],
-    },
-    positionPlayer: [1, 1],
+    new: true,
+    clearedLevel: {
+        'Tutorial1': false,
+        'Tutorial2': false,
+        'Tutorial3': false,
+        'Tutorial4': false
+    }
 }
 
 const directionInfo = {
