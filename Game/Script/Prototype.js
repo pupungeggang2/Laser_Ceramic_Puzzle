@@ -23,7 +23,7 @@ class Level {
         for (let i = 0; i < this.row; i++) {
             let temp = []
             for (let j = 0; j < this.col; j++) {
-                temp.push(new FloorEmpty([i, j]))
+                temp.push(new FloorEmpty({'Position': [i, j]}))
             }
             this.floor.push(temp)
         }
@@ -33,7 +33,7 @@ class Level {
             
             if (tempFloor['Type'] === 'Connection') {
                 let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
-                this.floor[pos[0]][pos[1]] = new Connection([pos[0], pos[1]], tempFloor['Properties'])
+                this.floor[pos[0]][pos[1]] = new Connection(tempFloor)
             } else if (tempFloor['Type'] === 'PressureButton') {
 
             } else if (tempFloor['Type'] === 'Gate') {
@@ -41,21 +41,21 @@ class Level {
             }
         }
 
-        this.floor[this.goal[0]][this.goal[1]] = new Goal([this.goal[0], this.goal[1]])
+        this.floor[this.goal[0]][this.goal[1]] = new Goal({'Position': [this.goal[0], this.goal[1]]})
 
         this.thing = []
 
         for (let i = 0; i < this.row; i++) {
             let temp = []
             for (let j = 0; j < this.col; j++) {
-                temp.push(new ThingEmpty([i, j]))
+                temp.push(new ThingEmpty({'Position': [i, j]}))
             }
             this.thing.push(temp)
         }
 
         for (let i = 0; i < data['Wall'].length; i++) {
             let pos = [data['Wall'][i][0], data['Wall'][i][1]]
-            this.thing[pos[0]][pos[1]] = new Wall([pos[0], pos[1]])
+            this.thing[pos[0]][pos[1]] = new Wall({'Position': [pos[0], pos[1]]})
         }
 
         for (let i = 0; i < data['Thing'].length; i++) {
@@ -63,11 +63,11 @@ class Level {
             
             if (tempThing['Type'] === 'Box') {
                 let pos = [tempThing['Position'][0], tempThing['Position'][1]]
-                this.thing[pos[0]][pos[1]] = new Box([pos[0], pos[1]])
+                this.thing[pos[0]][pos[1]] = new Box(tempThing)
             }
         }
 
-        this.thing[this.player[0]][this.player[1]] = new Player([this.player[0], this.player[1]])
+        this.thing[this.player[0]][this.player[1]] = new Player({'Position': [this.player[0], this.player[1]]})
     }
 
     movePlayer(direction) {
@@ -90,11 +90,11 @@ class Level {
                 if (this.insideBoard(cell2[0], cell2[1])) {
                     let tempThing2 = this.thing[cell2[0]][cell2[1]]
                     let tempFloor2 = this.thing[cell2[0]][cell2[1]]
-                    if (tempThing.pushable === true && tempThing2.solid === false && tempFloor2.solid === false) {
+                    if (tempThing1.pushable === true && tempThing2.solid === false && tempFloor2.solid === false) {
                         playerThing.position[0] += directionPosition[direction][0]
                         playerThing.position[1] += directionPosition[direction][1]
-                        tempThing.position[0] += directionPosition[direction][0]
-                        tempThing.position[1] += directionPosition[direction][1]
+                        tempThing1.position[0] += directionPosition[direction][0]
+                        tempThing1.position[1] += directionPosition[direction][1]
                         tempThing2.position[0] -= directionPosition[direction][0] * 2
                         tempThing2.position[1] -= directionPosition[direction][1] * 2
                         this.swapThing(cell1[0], cell1[1], cell2[0], cell2[1])
@@ -139,47 +139,52 @@ class Floor {
     position = [0, 0]
     solid = false
 
-    constructor() {
-
+    constructor(properties) {
+        this.position[0] = properties['Position'][1] * 64
+        this.position[1] = properties['Position'][0] * 64
     }
 }
 
 class FloorEmpty extends Floor {
-    constructor(position) {
-        super()
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
+    constructor(properties) {
+        super(properties)
     }
 }
 
 class PressureButton extends Floor {
-    constructor(position) {
-        super()
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
+    condition = []
+    constructor(properties) {
+        super(properties)
+        this.solid = properties['Solid']
+        this.condition = properties['Condition']
     }
 }
 
 class Gate extends Floor {
-    
+    condition = []
+    opened = false
+    constructor(properties) {
+        super(properties)
+        this.solid = properties['Solid']
+        this.condition = properties['Condition']
+        this.opened = properties['Opened']
+    }
 }
 
 class Connection extends Floor {
     connectedLevel = ''
     
-    constructor(position, connectedLevel) {
-        super()
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
-        this.connectedLevel = connectedLevel
+    constructor(properties) {
+        super(properties)
+        this.connectedLevel = properties['Connected']
     }
 }
 
 class Goal extends Floor {
-    constructor(position) {
-        super()
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
+    constructor(properties) {
+        super(properties)
+        this.position[0] = properties['Position'][1] * 64
+        this.position[1] = properties['Position'][0] * 64
     }
 }
 
@@ -191,45 +196,36 @@ class Thing {
     moveDist = 0
     moveDirection = 'N'
 
-    constructor() {
-    
+    constructor(properties) {
+        this.position[0] = properties['Position'][1] * 64
+        this.position[1] = properties['Position'][0] * 64
     }
 }
 
 class ThingEmpty extends Thing {
-    constructor(position) {
-        super()
-        this.solid = false
-        this.pushable = false
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
+    constructor(properties) {
+        super(properties)
     }
 }
 
 class Wall extends Thing {
-    constructor(position) {
-        super()
-        this.solid = true
+    constructor(properties) {
+        super(properties)
+        this.solid = false
         this.pushable = false
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
     }
 }
 
 class Box extends Thing {
-    constructor(position) {
-        super()
-        this.solid = true
-        this.pushable = true
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
+    constructor(properties) {
+        super(properties)
+        this.solid = properties['Solid']
+        this.pushable = properties['Pushable']
     }
 }
 
 class Player extends Thing {
-    constructor(position) {
-        super()
-        this.position[0] = position[1] * 64
-        this.position[1] = position[0] * 64
+    constructor(properties) {
+        super(properties)
     }
 }

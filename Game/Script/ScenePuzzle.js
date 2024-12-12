@@ -74,10 +74,12 @@ function keyDownPuzzle(key) {
             if (level.winCheck() === true) {
                 if (hubMode === true) {
                     state = 'GameClear'
+                    saveData()
                     transitionTime = 1
                 } else {
-                    varSave.clearedLevel[level.name] = true
                     state = 'LevelClear'
+                    varSave.clearedLevel[level.name] = true
+                    saveData()
                     transitionTime = 1
                 }
             }

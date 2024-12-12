@@ -6,10 +6,10 @@ const dataLevel = {
 
         ],
         'Floor': [
-            {'Type': 'Connection', 'Position': [3, 1], 'Properties': 'Tutorial1'},
-            {'Type': 'Connection', 'Position': [3, 3], 'Properties': 'Tutorial2'},
-            {'Type': 'Connection', 'Position': [3, 5], 'Properties': 'Tutorial3'},
-            {'Type': 'Connection', 'Position': [3, 7], 'Properties': 'Tutorial4'},
+            {'Type': 'Connection', 'Position': [3, 1], 'Connected': 'Tutorial1'},
+            {'Type': 'Connection', 'Position': [3, 3], 'Connected': 'Tutorial2'},
+            {'Type': 'Connection', 'Position': [3, 5], 'Connected': 'Tutorial3'},
+            {'Type': 'Connection', 'Position': [3, 7], 'Connected': 'Tutorial4'},
         ],
         'Thing': [
 
@@ -52,7 +52,7 @@ const dataLevel = {
             
         ],
         'Thing': [
-            {'Type': 'Box', 'Position': [3, 4], 'Solid': false, 'Pushable': false, }
+            {'Type': 'Box', 'Position': [3, 4], 'Solid': true, 'Pushable': true}
         ],
         'Start': [3, 1],
         'Goal': [3, 6],
@@ -69,11 +69,11 @@ const dataLevel = {
             [5, 5], [5, 6],
         ],
         'Floor': [
-            {'Type': 'PressureButton', 'Position': [5, 6], 'Solid': false},
-            {'Type': 'Gate', 'Position': [6, 4], 'Solid': true, 'State': 'Closed'}
+            {'Type': 'PressureButton', 'Position': [6, 2], 'Solid': false},
+            {'Type': 'Gate', 'Position': [6, 5], 'Solid': true, 'Opened': false}
         ],
         'Thing': [
-            {'Type': 'Box', 'Position': [2, 4], 'Solid': false, 'Pushable': true},
+            {'Type': 'Box', 'Position': [2, 4], 'Solid': true, 'Pushable': true},
         ],
         'Start': [3, 1],
         'Goal': [6, 6],
