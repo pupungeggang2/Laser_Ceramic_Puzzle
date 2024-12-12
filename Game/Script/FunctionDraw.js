@@ -71,12 +71,16 @@ function drawLevel(level, cameraValid) {
                     }
                 } else if (tempFloor instanceof PressureButton) {
                     context.drawImage(img.pressureButton, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    context.font = '16px neodgm'
+                    context.fillText(`${tempFloor.group}`, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + 4, top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + 4)
                 } else if (tempFloor instanceof Gate) {
                     if (tempFloor.opened === true) {
                         context.drawImage(img.gateOpened, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
                     } else {
                         context.drawImage(img.gateClosed, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
                     }
+                    context.font = '16px neodgm'
+                    context.fillText(`${tempFloor.condition}`, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + 4, top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + 4)
                 }
 
                 if (tempThing instanceof Wall) {

@@ -186,9 +186,11 @@ class FloorEmpty extends Floor {
 
 class PressureButton extends Floor {
     state = false
+    group = -1
     constructor(properties) {
         super(properties)
         this.solid = properties['Solid']
+        this.group = properties['Group']
     }
 
     checkTruth(thing) {
@@ -214,15 +216,11 @@ class Gate extends Floor {
     checkTruth(group) {
         this.opened = true
         this.solid = false
-        for (let i = 0; i < this.condition.length; i++) {
-            if (this.condition[i][0] === 'And') {
-                for (let j = 0; j < group[this.condition[i][1]].length; j++) {
-                    if (group[this.condition[i][1]][j].state === false) {
-                        this.opened = false
-                        this.solid = true
-                        return
-                    }
-                }
+        for (let i = 0; i < group[this.condition].length; i++) {
+            if (group[this.condition][i].state === false) {
+                this.opened = false
+                this.solid = true
+                return
             }
         }
     }
@@ -274,6 +272,25 @@ class Wall extends Thing {
 }
 
 class Box extends Thing {
+    constructor(properties) {
+        super(properties)
+        this.solid = properties['Solid']
+        this.pushable = properties['Pushable']
+    }
+}
+
+class NumGlass extends Thing {
+    number = 0
+    constructor(properties) {
+        super(properties)
+        this.solid = properties['Solid']
+        this.pushable = properties['Pushable']
+    }
+}
+
+class Laser extends Thing {
+    rayDirection = ''
+    condition = ['', 0]
     constructor(properties) {
         super(properties)
         this.solid = properties['Solid']
