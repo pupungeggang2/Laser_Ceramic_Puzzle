@@ -2,9 +2,12 @@ let img = {
     button: {
         play: new Image(),
         erase: new Image(),
-        back: new Image(),
         clear: new Image(),
         menu: new Image(),
+
+        resume: new Image(),
+        back: new Image(),
+        home: new Image(),
     },
 
     wall: new Image(),
@@ -21,8 +24,12 @@ let img = {
 function imageLoad() {
     img.button.play.src = 'Image/ButtonPlay.png'
     img.button.erase.src = 'Image/ButtonErase.png'
-    img.button.back.src = 'Image/ButtonBack.png'
     img.button.clear.src = 'Image/ButtonClear.png'
+    img.button.menu.src - 'Image/ButtonMenu.png'
+
+    img.button.resume.src = 'Image/ButtonResume.png'
+    img.button.back.src = 'Image/ButtonBack.png'
+    img.button.home.src = 'Image/ButtonHome.png'
 
     img.wall.src = 'Image/Wall.png'
     img.box.src = 'Image/Box.png'

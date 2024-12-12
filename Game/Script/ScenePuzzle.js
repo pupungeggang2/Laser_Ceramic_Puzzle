@@ -25,6 +25,7 @@ function loopPuzzle() {
 function displayPuzzle() {
     drawSceneInit()
     drawLevel(level, cameraValid)
+    context.drawImage(img.button.menu, UI.puzzle.buttonMenu[0], UI.puzzle.buttonMenu[1])
 
     if (state === 'Tutorial') {
         drawTutorial()
@@ -36,6 +37,10 @@ function displayPuzzle() {
 
     if (state === 'GameClear') {
         drawGameClear()
+    }
+
+    if (menu === true) {
+        drawMenu()   
     }
 }
 
@@ -49,6 +54,9 @@ function mouseUpPuzzle(x, y, button) {
 
 function keyDownPuzzle(key) {
     if (menu === false) {
+        if (key === 'Escape') {
+            menu = true
+        }
         if (state === '') {
             if (key === 'w') {
                 level.movePlayer('Up')
@@ -85,6 +93,22 @@ function keyDownPuzzle(key) {
             }
         } else if (state === 'Tutorial') {
             state = ''
+        }
+    } else if (menu === true) {
+        if (key === 'e' || key === 'Escape') {
+            menu = false
+        } else if (key === 'r') {
+            if (hubMode === true) {
+                hubMode = true
+                cameraValid = true
+                level = levelHub
+                state = ''
+            }
+            menu = false
+        } else if (key === 'q') {
+            scene = 'Title'
+            state = ''
+            menu = false
         }
     }
 }

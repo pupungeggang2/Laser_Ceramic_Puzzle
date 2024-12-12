@@ -112,3 +112,14 @@ function drawGameClear() {
 
     context.drawImage(img.button.clear, UI.puzzle.clearedWindow.imageCleared[0], UI.puzzle.clearedWindow.imageCleared[1])
 }
+
+function drawMenu() {
+    context.fillStyle = 'White'
+    context.fillRect(UI.menu.rect[0], UI.menu.rect[1], UI.menu.rect[2], UI.menu.rect[3])
+    context.strokeRect(UI.menu.rect[0], UI.menu.rect[1], UI.menu.rect[2], UI.menu.rect[3])
+    context.fillStyle = 'Black'
+
+    context.drawImage(img.button.resume, UI.menu.buttonResume[0], UI.menu.buttonResume[1])
+    context.drawImage(img.button.back, UI.menu.buttonBack[0], UI.menu.buttonBack[1])
+    context.drawImage(img.button.home, UI.menu.buttonExit[0], UI.menu.buttonExit[1])
+}
