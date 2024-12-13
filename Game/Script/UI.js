@@ -5,7 +5,7 @@ const UI = {
     },
 
     puzzle: {
-        textLevel: [20, 36],
+        textLevel: [32, 32],
         boardStart: [240, 40],
         cellSize: [64, 64],
         buttonMenu: [1160, 40, 80, 80],
@@ -19,10 +19,14 @@ const UI = {
         buttonLeft: [],
         buttonRight: [],
         buttonDown: [],
-        buttonInteract: [],
-        buttonUndo: [],
-        buttonRestart: [],
-        buttonHelp: [],
+        buttonRestart: [40, 160, 120, 120],
+        textRestart: [48, 168],
+        buttonUndo: [40, 360, 120, 120],
+        textUndo: [48, 368],
+        buttonInteract: [40, 560, 120, 120],
+        textInteract: [48, 568],
+        buttonHelp: [1120, 560, 120, 120],
+        textHelp: [1128, 568]
     },
 
     menu: {

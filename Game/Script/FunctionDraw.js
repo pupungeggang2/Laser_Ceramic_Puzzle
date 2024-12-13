@@ -131,7 +131,14 @@ function drawLevel(level, cameraValid) {
 }
 
 function drawUI() {
-
+    context.drawImage(img.button.restart, UI.puzzle.buttonRestart[0], UI.puzzle.buttonRestart[1])
+    context.fillText(`R`, UI.puzzle.textRestart[0], UI.puzzle.textRestart[1])
+    context.drawImage(img.button.undo, UI.puzzle.buttonUndo[0], UI.puzzle.buttonUndo[1])
+    context.fillText(`Q`, UI.puzzle.textUndo[0], UI.puzzle.textUndo[1])
+    context.drawImage(img.button.interact, UI.puzzle.buttonInteract[0], UI.puzzle.buttonInteract[1])
+    context.fillText(`E`, UI.puzzle.textInteract[0], UI.puzzle.textInteract[1])
+    context.drawImage(img.button.help, UI.puzzle.buttonHelp[0], UI.puzzle.buttonHelp[1])
+    context.fillText(`H`, UI.puzzle.textHelp[0], UI.puzzle.textHelp[1])
 }
 
 function drawTutorial() {

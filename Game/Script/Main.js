@@ -9,6 +9,8 @@ function main() {
     window.addEventListener('keydown', keyDown, false)
     window.addEventListener('mousedown', mouseDown, false)
     window.addEventListener('mouseup', mouseUp, false)
+    window.addEventListener('touchstart', touchStart, false)
+    window.addEventListener('touchend', touchEnd, false)
 
     imageLoad()
     saveInit()
@@ -61,6 +63,35 @@ function mouseDown(event) {
         mouseDownPuzzle(x, y, button)
     } else if (scene === 'Credit') {
         mouseDownCredit(x, y, button)
+    }
+}
+
+function touchStart(event) {
+    let targetRect = canvas.getBoundingClientRect()
+    let x = (event.changedTouches[0].pageX - targetRect.left) / targetRect.width * canvas.width
+    let y = (event.changedTouches[0].pageY - targetRect.top) / targetRect.height * canvas.height
+
+    if (scene === 'Title') {
+        mouseDownTitle(x, y, 0)
+    } else if (scene === 'Puzzle') {
+        mouseDownPuzzle(x, y, 0)
+    } else if (scene === 'Credit') {
+        mouseDownCredit(x, y, 0)
+    }
+
+}
+
+function touchEnd(event) {
+    let targetRect = canvas.getBoundingClientRect()
+    let x = (event.changedTouches[0].pageX - targetRect.left) / targetRect.width * canvas.width
+    let y = (event.changedTouches[0].pageY - targetRect.top) / targetRect.height * canvas.height
+
+    if (scene === 'Title') {
+        mouseUpTitle(x, y, 0)
+    } else if (scene === 'Puzzle') {
+        mouseUpPuzzle(x, y, 0)
+    } else if (scene === 'Credit') {
+        mouseUpCredit(x, y, 0)
     }
 }
 

@@ -5,6 +5,11 @@ let img = {
         clear: new Image(),
         menu: new Image(),
 
+        restart: new Image(),
+        undo: new Image(),
+        interact: new Image(),
+        help: new Image(),
+
         resume: new Image(),
         back: new Image(),
         home: new Image(),
@@ -30,6 +35,11 @@ function imageLoad() {
     img.button.erase.src = 'Image/ButtonErase.png'
     img.button.clear.src = 'Image/ButtonClear.png'
     img.button.menu.src = 'Image/ButtonMenu.png'
+
+    img.button.undo.src = 'Image/ButtonUndo.png'
+    img.button.restart.src = 'Image/ButtonRestart.png'
+    img.button.interact.src = 'Image/ButtonInteract.png'
+    img.button.help.src = 'Image/ButtonHelp.png'
 
     img.button.resume.src = 'Image/ButtonResume.png'
     img.button.back.src = 'Image/ButtonBack.png'

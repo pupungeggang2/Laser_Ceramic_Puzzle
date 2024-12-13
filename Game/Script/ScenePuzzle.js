@@ -47,7 +47,9 @@ function displayPuzzle() {
 }
 
 function mouseDownPuzzle(x, y, button) {
-    
+    if (button === 0) {
+        mousePressed = [x, y]
+    }
 }
 
 function mouseUpPuzzle(x, y, button) {
@@ -57,7 +59,32 @@ function mouseUpPuzzle(x, y, button) {
                 menu = true
             }
             if (state === '') {
-
+                if (pointInsideRectArray(x, y, UI.puzzle.buttonInteract)) {
+                    interact()
+                } else if (pointInsideRectArray(x, y, UI.puzzle.buttonRestart)) {
+                    restartLevel()
+                } else if (pointInsideRectArray(x, y, UI.puzzle.buttonMenu)) {
+                    menu = true
+                } else {
+                    let diff = [x - mousePressed[0], y - mousePressed[1]]
+                    if (vectorLength(diff[0], diff[1]) > 64) {
+                        if (Math.abs(diff[0]) > Math.abs(diff[1])) {
+                            if (diff[0] > 0) {
+                                level.movePlayer('Right')
+                            } else {
+                                level.movePlayer('Left')
+                            }
+                        } else {
+                            if (diff[1] > 0) {
+                                level.movePlayer('Down')
+                            } else {
+                                level.movePlayer('Up')
+                            }
+                        }
+                    }
+                }
+            } else if (state === 'Tutorial') {
+                state = ''
             }
         } else if (menu === true) {
             if (pointInsideRectArray(x, y, UI.menu.buttonResume)) {
@@ -95,17 +122,13 @@ function keyDownPuzzle(key) {
             } else if (key === 'd') {
                 level.movePlayer('Right')
             } else if (key === 'e') {
-                let tempPos = [level.player[0], level.player[1]]
-                let tempFloor = level.floor[tempPos[0]][tempPos[1]]
+                interact()
+            } else if (key === 'r') {
+                restartLevel()
+            } else if (key === 'q') {
 
-                if (tempFloor instanceof Connection) {
-                    levelHub = level
-                    level = new Level(dataLevel[tempFloor.connectedLevel])
-                    if (hubMode === true) {
-                        hubMode = false
-                        cameraValid = false
-                    }
-                }
+            } else if (key === 'h') {
+
             }
             if (level.winCheck() === true) {
                 if (hubMode === true) {

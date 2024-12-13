@@ -21,3 +21,5 @@ let level
 let levelHub
 
 let transitionTime = 0
+
+let mousePressed = [0, 0]
