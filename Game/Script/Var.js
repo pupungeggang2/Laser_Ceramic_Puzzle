@@ -9,3 +9,15 @@ let delta
 let scene = 'Title'
 let state = ''
 let menu = false
+
+let varSave = {
+
+}
+
+let cameraValid = true
+let camera = [0, 0]
+let hubMode = true
+let level
+let levelHub
+
+let transitionTime = 0
