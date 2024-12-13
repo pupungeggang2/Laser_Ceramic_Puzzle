@@ -6,7 +6,9 @@ const emptySave = {
         'Tutorial1': false,
         'Tutorial2': false,
         'Tutorial3': false,
-        'Tutorial4': false
+        'Tutorial4': false,
+        'Tutorial5': false,
+        'Tutorial6': false,
     }
 }
 

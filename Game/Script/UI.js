@@ -5,6 +5,7 @@ const UI = {
     },
 
     puzzle: {
+        textLevel: [20, 36],
         boardStart: [240, 40],
         cellSize: [64, 64],
         buttonMenu: [1160, 40, 80, 80],
@@ -29,5 +30,9 @@ const UI = {
         buttonResume: [360, 280, 160, 160],
         buttonBack: [560, 280, 160, 160],
         buttonExit: [760, 280, 160, 160],
-    }
+    },
+
+    cornerText: [4, 4],
+    cornerRect: [0, 0, 32, 32],
+    centerText: [4, 20]
 }

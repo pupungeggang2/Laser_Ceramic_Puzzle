@@ -6,6 +6,7 @@ class Level {
     goal = [0, 0]
     floor = []
     thing = []
+    laser = []
     group = {}
 
     camera = [0, 0]
@@ -49,6 +50,10 @@ class Level {
                 let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
                 let floorInstance = new Gate(tempFloor)
                 this.floor[pos[0]][pos[1]] = floorInstance
+            } else if (tempFloor['Type'] === 'LevelGate') {
+                let pos = [tempFloor['Position'][0], tempFloor['Position'][1]]
+                let floorInstance = new LevelGate(tempFloor)
+                this.floor[pos[0]][pos[1]] = floorInstance
             }
         }
 
@@ -75,10 +80,26 @@ class Level {
             if (tempThing['Type'] === 'Box') {
                 let pos = [tempThing['Position'][0], tempThing['Position'][1]]
                 this.thing[pos[0]][pos[1]] = new Box(tempThing)
-            }
+            } else if (tempThing['Type'] === 'NumGlass') {
+                let pos = [tempThing['Position'][0], tempThing['Position'][1]]
+                this.thing[pos[0]][pos[1]] = new NumGlass(tempThing)
+            } else if (tempThing['Type'] === 'LaserEmitter') {
+                let pos = [tempThing['Position'][0], tempThing['Position'][1]]
+                let thingInstance = new LaserEmitter(tempThing)
+                this.thing[pos[0]][pos[1]] = thingInstance
+                this.group[tempThing['Group']].push(thingInstance)
+            } 
         }
 
         this.thing[this.player[0]][this.player[1]] = new Player({'Position': [this.player[0], this.player[1]]})
+
+        for (let i = 0; i < this.row; i++) {
+            let temp = []
+            for (let j = 0; j < this.col; j++) {
+                temp.push({'H' : false, 'V': false})
+            }
+            this.laser.push(temp)
+        }
 
         this.applyBoardChange()
     }
@@ -125,11 +146,33 @@ class Level {
     applyBoardChange() {
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
+                this.laser[i][j]['H'] = false
+                this.laser[i][j]['V'] = false
+            }
+        }
+
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
+                let tempFloor = this.floor[i][j]
+                let tempThing = this.thing[i][j]
+
+                if (tempThing instanceof LaserEmitter) {
+                    tempThing.findPassingCell([i, j], this.thing, this.laser, [this.row, this.col])
+                }
+            }
+        }
+
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
                 let tempFloor = this.floor[i][j]
                 let tempThing = this.thing[i][j]
 
                 if (tempFloor instanceof PressureButton) {
                     tempFloor.checkTruth(tempThing)
+                }
+
+                if (tempThing instanceof LaserEmitter) {
+                    tempThing.checkTruth(this.thing)
                 }
             }
         }
@@ -141,6 +184,10 @@ class Level {
 
                 if (tempFloor instanceof Gate) {
                     tempFloor.checkTruth(this.group)
+                }
+
+                if (tempFloor instanceof LevelGate) {
+                    tempFloor.checkTruth()
                 }
             }
         }
@@ -202,6 +249,23 @@ class PressureButton extends Floor {
     }
 }
 
+class Connection extends Floor {
+    connectedLevel = ''
+    
+    constructor(properties) {
+        super(properties)
+        this.connectedLevel = properties['Connected']
+    }
+}
+
+class Goal extends Floor {
+    constructor(properties) {
+        super(properties)
+        this.position[0] = properties['Position'][1] * 64
+        this.position[1] = properties['Position'][0] * 64
+    }
+}
+
 class Gate extends Floor {
     condition = []
     opened = false
@@ -210,7 +274,6 @@ class Gate extends Floor {
         this.solid = properties['Solid']
         this.condition = properties['Condition']
         this.opened = properties['Opened']
-        this.condition = properties['Condition']
     }
 
     checkTruth(group) {
@@ -226,20 +289,26 @@ class Gate extends Floor {
     }
 }
 
-class Connection extends Floor {
-    connectedLevel = ''
-    
+class LevelGate extends Floor {
+    condition = []
+    opened = false
     constructor(properties) {
         super(properties)
-        this.connectedLevel = properties['Connected']
+        this.solid = properties['Solid']
+        this.condition = properties['Condition']
+        this.opened = properties['Opened']
     }
-}
 
-class Goal extends Floor {
-    constructor(properties) {
-        super(properties)
-        this.position[0] = properties['Position'][1] * 64
-        this.position[1] = properties['Position'][0] * 64
+    checkTruth() {
+        this.opened = true
+        this.solid = false
+        for (let i = 0; i < this.condition.length; i++) {
+            if (varSave.clearedLevel[this.condition[i]] === false) {
+                this.opened = false
+                this.solid = true
+                return
+            }
+        }
     }
 }
 
@@ -285,16 +354,87 @@ class NumGlass extends Thing {
         super(properties)
         this.solid = properties['Solid']
         this.pushable = properties['Pushable']
+        this.number = properties['Number']
     }
 }
 
-class Laser extends Thing {
+class LaserEmitter extends Thing {
     rayDirection = ''
     condition = ['', 0]
+    passingCell = []
+    currentNum = 0
+    state = false
     constructor(properties) {
         super(properties)
         this.solid = properties['Solid']
         this.pushable = properties['Pushable']
+        this.rayDirection = properties['RayDirection']
+        this.condition = properties['Condition']
+    }
+
+    checkTruth(thing) {
+        this.currentNum = 0
+        for (let i = 0; i < this.passingCell.length; i++) {
+            let tempThing = thing[this.passingCell[i][0]][this.passingCell[i][1]]
+            if (tempThing instanceof NumGlass) {
+                this.currentNum += tempThing.number
+            }
+        }
+
+        if (this.condition[0] === 'Equal') {
+            if (this.currentNum === this.condition[1]) {
+                this.state = true
+                return
+            }
+        }
+
+        this.state = false
+    }
+
+    findPassingCell(pos, thing, laser, size) {
+        this.passingCell = []
+        let currentPosition = [pos[0], pos[1]]
+        let currentRayDirection = this.rayDirection
+        let iter = 0
+
+        while (iter < 100) {
+            currentPosition[0] += directionInfo[currentRayDirection][0]
+            currentPosition[1] += directionInfo[currentRayDirection][1]
+
+            let tempThing = thing[currentPosition[0]][currentPosition[1]]
+
+            if (!(this.insideBoard(currentPosition[0], currentPosition[1], size[0], size[1]))) {
+                break
+            }
+
+            if (tempThing instanceof ThingEmpty) {
+                this.passingCell.push([currentPosition[0], currentPosition[1]])
+                if (currentRayDirection === 'Left' || currentRayDirection === 'Right') {
+                    laser[currentPosition[0]][currentPosition[1]]['H'] = true
+                } else {
+                    laser[currentPosition[0]][currentPosition[1]]['V'] = true
+                }
+            } else if (tempThing instanceof NumGlass) {
+                this.passingCell.push([currentPosition[0], currentPosition[1]])
+                if (currentRayDirection === 'Left' || currentRayDirection === 'Right') {
+                    laser[currentPosition[0]][currentPosition[1]]['H'] = true
+                } else {
+                    laser[currentPosition[0]][currentPosition[1]]['V'] = true
+                }
+            } else {
+                break
+            }
+
+            iter += 1
+        }
+    }
+
+    insideBoard(row, col, rsize, csize) {
+        if (row >= 0 && row < rsize && col >= 0 && col < csize) {
+            return true
+        }
+
+        return false
     }
 }
 

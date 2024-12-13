@@ -7,6 +7,7 @@ function loopPuzzle() {
                 hubMode = true
                 cameraValid = true
                 level = levelHub
+                level.applyBoardChange()
                 state = ''
             } else {
                 transitionTime -= delta / 1000
@@ -25,6 +26,7 @@ function loopPuzzle() {
 function displayPuzzle() {
     drawSceneInit()
     drawLevel(level, cameraValid)
+    drawUI()
     context.drawImage(img.button.menu, UI.puzzle.buttonMenu[0], UI.puzzle.buttonMenu[1])
 
     if (state === 'Tutorial') {
@@ -49,7 +51,33 @@ function mouseDownPuzzle(x, y, button) {
 }
 
 function mouseUpPuzzle(x, y, button) {
+    if (button === 0) {
+        if (menu === false) {
+            if (pointInsideRectArray(x, y, UI.puzzle.buttonMenu)) {
+                menu = true
+            }
+            if (state === '') {
 
+            }
+        } else if (menu === true) {
+            if (pointInsideRectArray(x, y, UI.menu.buttonResume)) {
+                menu = false
+            } else if (pointInsideRectArray(x, y, UI.menu.buttonBack)) {
+                if (hubMode === false) {
+                    hubMode = true
+                    cameraValid = true
+                    level = levelHub
+                    level.applyBoardChange()
+                    state = ''
+                }
+                menu = false
+            } else if (pointInsideRectArray(x, y, UI.menu.buttonExit)) {
+                scene = 'Title'
+                state = ''
+                menu = false
+            }
+        }
+    }
 }
 
 function keyDownPuzzle(key) {
@@ -98,10 +126,11 @@ function keyDownPuzzle(key) {
         if (key === 'e' || key === 'Escape') {
             menu = false
         } else if (key === 'r') {
-            if (hubMode === true) {
+            if (hubMode === false) {
                 hubMode = true
                 cameraValid = true
                 level = levelHub
+                level.applyBoardChange()
                 state = ''
             }
             menu = false

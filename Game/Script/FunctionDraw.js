@@ -18,6 +18,8 @@ function drawLevel(level, cameraValid) {
     let rowStart = 0
     let colStart = 0
 
+    context.font = '32px neodgm'
+
     if (cameraValid === true) {
         numRow = 10
         numCol = 12
@@ -56,6 +58,15 @@ function drawLevel(level, cameraValid) {
         for (let j = 0; j < numCol; j++) {
             let row = rowStart + i
             let col = colStart + j
+
+            if (level.laser[row][col]['H'] === true) {
+                context.drawImage(img.laserH, left + col * 64 - colStart * UI.puzzle.cellSize[0], top + row * 64 - rowStart * UI.puzzle.cellSize[1])
+            }
+
+            if (level.laser[row][col]['V'] === true) {
+                context.drawImage(img.laserV, left + col * 64 - colStart * UI.puzzle.cellSize[0], top + row * 64 - rowStart * UI.puzzle.cellSize[1])
+            }
+
             if (level.insideBoard(row, col)) {
                 let tempFloor = level.floor[row][col]
                 let tempThing = level.thing[row][col]
@@ -71,7 +82,10 @@ function drawLevel(level, cameraValid) {
                     }
                 } else if (tempFloor instanceof PressureButton) {
                     context.drawImage(img.pressureButton, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
-                    context.font = '16px neodgm'
+                     context.fillStyle = 'White'
+                    context.fillRect(left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + UI.cornerRect[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.cornerRect[1], UI.cornerRect[2], UI.cornerRect[3])
+                    context.strokeRect(left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + UI.cornerRect[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.cornerRect[1], UI.cornerRect[2], UI.cornerRect[3])
+                     context.fillStyle = 'Black'
                     context.fillText(`${tempFloor.group}`, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + 4, top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + 4)
                 } else if (tempFloor instanceof Gate) {
                     if (tempFloor.opened === true) {
@@ -79,8 +93,17 @@ function drawLevel(level, cameraValid) {
                     } else {
                         context.drawImage(img.gateClosed, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
                     }
-                    context.font = '16px neodgm'
-                    context.fillText(`${tempFloor.condition}`, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + 4, top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + 4)
+                    context.fillStyle = 'White'
+                    context.fillRect(left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + UI.cornerRect[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.cornerRect[1], UI.cornerRect[2], UI.cornerRect[3])
+                    context.strokeRect(left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + UI.cornerRect[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.cornerRect[1], UI.cornerRect[2], UI.cornerRect[3])
+                    context.fillStyle = 'Black'
+                    context.fillText(`${tempFloor.condition}`, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0] + UI.cornerText[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.cornerText[1])
+                } else if (tempFloor instanceof LevelGate) {
+                    if (tempFloor.opened === true) {
+                        context.drawImage(img.gateOpened, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    } else {
+                        context.drawImage(img.gateClosed, left + tempFloor.position[0] - colStart * UI.puzzle.cellSize[0], top + tempFloor.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    }
                 }
 
                 if (tempThing instanceof Wall) {
@@ -89,10 +112,26 @@ function drawLevel(level, cameraValid) {
                     context.drawImage(img.box, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1])
                 } else if (tempThing instanceof Player) {
                     context.drawImage(img.player, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1])
+                } else if (tempThing instanceof NumGlass) {
+                    context.drawImage(img.numGlass, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    context.fillText(`${tempThing.number}`, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0] + UI.centerText[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.centerText[1])
+                } else if (tempThing instanceof LaserEmitter) {
+                    context.drawImage(img.laserEmitter, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1])
+                    if (tempThing.condition[0] === 'Equal') {
+                        context.fillText(`${tempThing.currentNum}=${tempThing.condition[1]}`, left + tempThing.position[0] - colStart * UI.puzzle.cellSize[0] + UI.centerText[0], top + tempThing.position[1] - rowStart * UI.puzzle.cellSize[1] + UI.centerText[1])
+                    }
                 }
             }
         }
     }
+
+    if (level.floor[level.player[0]][level.player[1]] instanceof Connection) {
+        context.fillText(`${level.floor[level.player[0]][level.player[1]].connectedLevel}`, UI.puzzle.textLevel[0], UI.puzzle.textLevel[1])
+    }
+}
+
+function drawUI() {
+
 }
 
 function drawTutorial() {

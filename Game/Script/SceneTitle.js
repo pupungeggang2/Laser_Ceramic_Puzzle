@@ -21,6 +21,9 @@ function mouseUpTitle(x, y, button) {
                     scene = 'Puzzle'
                     state = ''
                     level = new Level(dataLevel['Hub'])
+                    cameraValid = true
+                    hubMode = true
+                    level.applyBoardChange()
 
                     if (varSave.new === true) {
                         varSave.new = false
@@ -41,6 +44,8 @@ function keyDownTitle(key) {
                 scene = 'Puzzle'
                 state = ''
                 level = new Level(dataLevel['Hub'])
+                cameraValid = true
+                hubMode = true
                 level.applyBoardChange()
 
                 if (varSave.new === true) {

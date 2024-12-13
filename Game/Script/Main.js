@@ -44,7 +44,7 @@ function mouseUp(event) {
         mouseUpTitle(x, y, button)
     } else if (scene === 'Puzzle') {
         mouseUpPuzzle(x, y, button)
-    } else if (sceen === 'Credit') {
+    } else if (scene === 'Credit') {
         mouseUpCredit(x, y, button)
     }
 }
@@ -59,7 +59,7 @@ function mouseDown(event) {
         mouseDownTitle(x, y, button)
     } else if (scene === 'Puzzle') {
         mouseDownPuzzle(x, y, button)
-    } else if (Scene === 'Credit') {
+    } else if (scene === 'Credit') {
         mouseDownCredit(x, y, button)
     }
 }

@@ -18,17 +18,19 @@
 - :green_square: :green_square: :black_large_square: Implementing objects.
   - :green_square: Wall
   - :green_square: Box
-  - :black_large_square: Button
-  - :black_large_square: Gate
+  - :green_square: Button
+  - :green_square: Gate
+  - :green_square: Laser Emitter
+  - :green_square: Glass
 
 - :green_square: Handling player move.
 - :black_large_square: Handling movement animation.
-- :black_large_square: Handling board change.
+- :green_square: Handling board change.
 
 - :black_large_square: Handling undo.
 - :black_large_square: Handling restart.
 - :black_large_square: Handling tutorial.
-- :black_large_square: Handling menu.
+- :green_square: Handling menu.
 
 - :green_square: Checking win.
 - :green_square: Autosave when win.
