@@ -142,13 +142,13 @@ function keyDownPuzzle(key) {
             menu = true
         }
         if (state === '') {
-            if (key === 'w') {
+            if (key === 'w' || key === 'ArrowUp') {
                 level.movePlayer('Up')
-            } else if (key === 'a') {
+            } else if (key === 'a' || key === 'ArrowLeft') {
                 level.movePlayer('Left')
-            } else if (key === 's') {
+            } else if (key === 's' || key === 'ArrowDown') {
                 level.movePlayer('Down')
-            } else if (key === 'd') {
+            } else if (key === 'd' || key === 'ArrowRight') {
                 level.movePlayer('Right')
             } else if (key === 'e') {
                 interact()
