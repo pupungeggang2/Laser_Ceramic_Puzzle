@@ -21,6 +21,20 @@ function loopPuzzle() {
             }   
         }
     }
+
+    if (pressed === true) {
+        if (pressedTime > 0.6) {
+            pressed = false
+            pressedTime = 0
+            if (menu === false) {
+                if (state === '') {
+                    interact()
+                }
+            }
+        } else {
+            pressedTime += delta / 1000    
+        }     
+    }
 }
 
 function displayPuzzle() {
@@ -47,12 +61,15 @@ function displayPuzzle() {
 }
 
 function mouseDownPuzzle(x, y, button) {
+    pressed = true
+    pressedTime = 0
     if (button === 0) {
         mousePressed = [x, y]
     }
 }
 
 function mouseUpPuzzle(x, y, button) {
+    pressed = false
     if (button === 0) {
         if (menu === false) {
             if (pointInsideRectArray(x, y, UI.puzzle.buttonMenu)) {
@@ -81,6 +98,18 @@ function mouseUpPuzzle(x, y, button) {
                                 level.movePlayer('Up')
                             }
                         }
+                    }
+                }
+                if (level.winCheck() === true) {
+                    if (hubMode === true) {
+                        state = 'GameClear'
+                        saveData()
+                        transitionTime = 1
+                    } else {
+                        state = 'LevelClear'
+                        varSave.clearedLevel[level.name] = true
+                        saveData()
+                        transitionTime = 1
                     }
                 }
             } else if (state === 'Tutorial') {
