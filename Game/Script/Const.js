@@ -19,3 +19,5 @@ const directionInfo = {
 const directionPosition = {
     'Up': [0, -64], 'Left': [-64, 0], 'Right': [64, 0], 'Down': [0, 64]
 }
+
+const moveSpeed = 4
