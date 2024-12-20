@@ -113,10 +113,25 @@ class Level {
             let tempFloor1 = this.floor[cell1[0]][cell1[1]] 
             let tempThing1 = this.thing[cell1[0]][cell1[1]]
             if (tempThing1.solid === false && tempFloor1.solid === false) {
-                playerThing.position[0] += directionPosition[direction][0]
-                playerThing.position[1] += directionPosition[direction][1]
-                tempThing1.position[0] -= directionPosition[direction][0]
-                tempThing1.position[1] -= directionPosition[direction][1]
+                //playerThing.position[0] += directionPosition[direction][0]
+                //playerThing.position[1] += directionPosition[direction][1]
+                //tempThing1.position[0] -= directionPosition[direction][0]
+                //tempThing1.position[1] -= directionPosition[direction][1]
+                if (playerThing.moveQueue.length === 0) {
+                    playerThing.moveQueue.push([direction, [playerThing.position[0] + directionPosition[direction][0], playerThing.position[1] + directionPosition[direction][1]]])
+                } else {
+                    let index = playerThing.moveQueue.length - 1
+                    let tempPosition = playerThing.moveQueue[index][1]
+                    playerThing.moveQueue.push([direction, [tempPosition[0] + directionPosition[direction][0], tempPosition[1] + directionPosition[direction][1]]])
+                }
+
+                if (!(tempThing1 instanceof ThingEmpty)) {
+                    tempThing1.moveQueue.push([direction, [tempThing1.position[0] - directionPosition[direction][0], tempThing1.position[1] - directionPosition[direction][1]]])
+                } else {
+                    tempThing1.position[0] -= directionPosition[direction][0]
+                    tempThing1.position[1] -= directionPosition[direction][1]
+                }
+
                 this.swapThing(this.player[0], this.player[1], cell1[0], cell1[1])
                 this.player[0] = cell1[0]
                 this.player[1] = cell1[1]
@@ -132,7 +147,7 @@ class Level {
                         tempThing2.position[0] -= directionPosition[direction][0] * 2
                         tempThing2.position[1] -= directionPosition[direction][1] * 2
                         this.swapThing(cell1[0], cell1[1], cell2[0], cell2[1])
-                        this.swapThing(this.player[0], this.player[1], cell1[0], cell1[1])
+                        this.swapThing(this.ppupungeggang2/Laser_Puzzle_1layer[0], this.player[1], cell1[0], cell1[1])
                         this.player[0] = cell1[0]
                         this.player[1] = cell1[1]
                     }
@@ -213,6 +228,16 @@ class Level {
         this.thing[row1][col1] = this.thing[row2][col2]
         this.thing[row2][col2] = tempThing
     }
+
+    moveThings() {
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
+                if (this.thing[i][j] instanceof Player) {
+                    this.thing[i][j].handleMove()
+                }
+            }
+        }
+    }
 }
 
 class Floor {
@@ -245,7 +270,7 @@ class PressureButton extends Floor {
             this.state = false
         } else {
             this.state = true
-        }
+        }pupungeggang2/Laser_Puzzle_1
     }
 }
 
@@ -318,11 +343,31 @@ class Thing {
     pushable = false
     moving = false
     moveDist = 0
-    moveDirection = 'N'
+    moveDirection = 'None'
+    moveQueue = []
 
     constructor(properties) {
+        this.moveDist = 0
+        this.moveDirection = 'None'
+        this.moveQueue = []
         this.position[0] = properties['Position'][1] * 64
         this.position[1] = properties['Position'][0] * 64
+    }
+
+    handleMove() {
+        if (this.moveQueue.length != 0) {
+            let first = this.moveQueue[0]
+            if (this.moveDist >= 60) {
+                this.moveDist = 0
+                this.position[0] = first[1][0]
+                this.position[1] = first[1][1]
+                this.moveQueue.shift()
+            } else {
+                this.moveDist += moveSpeed * 64 * delta / 1000
+                this.position[0] += moveSpeed * directionPosition[first[0]][0] * delta / 1000
+                this.position[1] += moveSpeed * directionPosition[first[0]][1] * delta / 1000
+            }
+        }
     }
 }
 

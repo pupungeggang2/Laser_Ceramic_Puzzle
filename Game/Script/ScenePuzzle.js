@@ -2,7 +2,9 @@ function loopPuzzle() {
     displayPuzzle()
 
     if (menu === false) {
-        if (state === 'LevelClear') {
+        if (state === '') {
+            level.moveThings()
+        } else if (state === 'LevelClear') {
             if (transitionTime < 0) {
                 hubMode = true
                 cameraValid = true
