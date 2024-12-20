@@ -102,18 +102,6 @@ function mouseUpPuzzle(x, y, button) {
                         }
                     }
                 }
-                if (level.winCheck() === true) {
-                    if (hubMode === true) {
-                        state = 'GameClear'
-                        saveData()
-                        transitionTime = 1
-                    } else {
-                        state = 'LevelClear'
-                        varSave.clearedLevel[level.name] = true
-                        saveData()
-                        transitionTime = 1
-                    }
-                }
             } else if (state === 'Tutorial') {
                 state = ''
             }
@@ -160,18 +148,6 @@ function keyDownPuzzle(key) {
 
             } else if (key === 'h') {
 
-            }
-            if (level.winCheck() === true) {
-                if (hubMode === true) {
-                    state = 'GameClear'
-                    saveData()
-                    transitionTime = 1
-                } else {
-                    state = 'LevelClear'
-                    varSave.clearedLevel[level.name] = true
-                    saveData()
-                    transitionTime = 1
-                }
             }
         } else if (state === 'Tutorial') {
             state = ''

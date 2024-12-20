@@ -113,10 +113,6 @@ class Level {
             let tempFloor1 = this.floor[cell1[0]][cell1[1]] 
             let tempThing1 = this.thing[cell1[0]][cell1[1]]
             if (tempThing1.solid === false && tempFloor1.solid === false) {
-                //playerThing.position[0] += directionPosition[direction][0]
-                //playerThing.position[1] += directionPosition[direction][1]
-                //tempThing1.position[0] -= directionPosition[direction][0]
-                //tempThing1.position[1] -= directionPosition[direction][1]
                 if (playerThing.moveQueue.length === 0) {
                     playerThing.moveQueue.push([direction, [playerThing.position[0] + directionPosition[direction][0], playerThing.position[1] + directionPosition[direction][1]]])
                 } else {
@@ -126,7 +122,13 @@ class Level {
                 }
 
                 if (!(tempThing1 instanceof ThingEmpty)) {
-                    tempThing1.moveQueue.push([direction, [tempThing1.position[0] - directionPosition[direction][0], tempThing1.position[1] - directionPosition[direction][1]]])
+                    if (tempThing1.moveQueue.length === 0) {
+                        tempThing1.moveQueue.push([direction, [tempThing1.position[0] - directionPosition[direction][0], tempThing1.position[1] - directionPosition[direction][1]]])
+                    } else {
+                        let index = tempThing1.moveQueue.length - 1
+                        let tempPosition = tempThing1.moveQueue[index][1]
+                        tempThing1.moveQueue.push([direction, [tempPosition[0] + directionPosition[direction][0], tempPosition[1] + directionPosition[direction][1]]])
+                    }
                 } else {
                     tempThing1.position[0] -= directionPosition[direction][0]
                     tempThing1.position[1] -= directionPosition[direction][1]
@@ -140,14 +142,43 @@ class Level {
                     let tempThing2 = this.thing[cell2[0]][cell2[1]]
                     let tempFloor2 = this.thing[cell2[0]][cell2[1]]
                     if (tempThing1.pushable === true && tempThing2.solid === false && tempFloor2.solid === false) {
-                        playerThing.position[0] += directionPosition[direction][0]
-                        playerThing.position[1] += directionPosition[direction][1]
-                        tempThing1.position[0] += directionPosition[direction][0]
-                        tempThing1.position[1] += directionPosition[direction][1]
-                        tempThing2.position[0] -= directionPosition[direction][0] * 2
-                        tempThing2.position[1] -= directionPosition[direction][1] * 2
+                        if (playerThing.moveQueue.length === 0) {
+                            playerThing.moveQueue.push([direction, [playerThing.position[0] + directionPosition[direction][0], playerThing.position[1] + directionPosition[direction][1]]])
+                        } else {
+                            let index = playerThing.moveQueue.length - 1
+                            let tempPosition = playerThing.moveQueue[index][1]
+                            playerThing.moveQueue.push([direction, [tempPosition[0] + directionPosition[direction][0], tempPosition[1] + directionPosition[direction][1]]])
+                        }
+
+                        if (!(tempThing1 instanceof ThingEmpty)) {
+                            if (tempThing1.moveQueue.length === 0) {
+                                tempThing1.moveQueue.push([direction, [tempThing1.position[0] + directionPosition[direction][0], tempThing1.position[1] + directionPosition[direction][1]]])
+                            } else {
+                                let index = tempThing1.moveQueue.length - 1
+                                let tempPosition = tempThing1.moveQueue[index][1]
+                                tempThing1.moveQueue.push([direction, [tempPosition[0] + directionPosition[direction][0], tempPosition[1] + directionPosition[direction][1]]])
+                            }
+                        } else {
+                            tempThing1.position[0] += directionPosition[direction][0]
+                            tempThing1.position[1] += directionPosition[direction][1]
+                        }
+
+                        if (!(tempThing2 instanceof ThingEmpty)) {
+                            if (tempThing2.moveQueue.length === 0) {
+                                tempThing2.moveQueue.push([direction, [tempThing2.position[0] - directionPosition[direction][0] * 2, tempThing2.position[1] - directionPosition[direction][1] * 2]])
+                            } else {
+                                let index = tempThing2.moveQueue.length - 1
+                                let tempPosition = tempThing2.moveQueue[index][1]
+                                tempThing2.moveQueue.push([direction, [tempPosition[0] + directionPosition[direction][0] * 2, tempPosition[1] + directionPosition[direction][1] * 2]])
+                            }
+                        } else {
+                            tempThing2.position[0] -= directionPosition[direction][0] * 2
+                            tempThing2.position[1] -= directionPosition[direction][1] * 2
+                        }
+
+
                         this.swapThing(cell1[0], cell1[1], cell2[0], cell2[1])
-                        this.swapThing(this.ppupungeggang2/Laser_Puzzle_1layer[0], this.player[1], cell1[0], cell1[1])
+                        this.swapThing(this.player[0], this.player[1], cell1[0], cell1[1])
                         this.player[0] = cell1[0]
                         this.player[1] = cell1[1]
                     }
@@ -210,13 +241,23 @@ class Level {
 
     winCheck() {
         if (this.player[0] === this.goal[0] && this.player[1] === this.goal[1]) {
+            if (hubMode === true) {
+                state = 'GameClear'
+                saveData()
+                transitionTime = 1
+            } else {
+                state = 'LevelClear'
+                varSave.clearedLevel[this.name] = true
+                saveData()
+                transitionTime = 1
+            }
             return true
         }
         return false
     }
 
     insideBoard(row, col) {
-        if (row >= 0 && row < this.row && col >= 0 && col < this.col) {
+        if (row >= 0 && row < this.row && col >= 0 && col < this.col) { 
             return true
         }
 
@@ -230,14 +271,21 @@ class Level {
     }
 
     moveThings() {
+        let moving = false
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
-                if (this.thing[i][j] instanceof Player) {
+                if (!(this.thing[i][j] instanceof ThingEmpty)) {
+                    if (this.thing[i][j].moveQueue.length > 0) {
+                        moving = true
+                    }
                     this.thing[i][j].handleMove()
                 }
             }
         }
-    }
+        if (moving === false) {
+            this.winCheck()
+        }
+    } 
 }
 
 class Floor {
@@ -270,7 +318,7 @@ class PressureButton extends Floor {
             this.state = false
         } else {
             this.state = true
-        }pupungeggang2/Laser_Puzzle_1
+        }
     }
 }
 
